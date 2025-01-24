@@ -36,7 +36,7 @@ class PostController extends Controller
 
         Post::create($validated); // Create a new post
 
-        return redirect()->route('posts')->with('success', 'Post created successfully.');
+        return redirect()->route('posts.index')->with('success', 'Post created successfully.');
     }
 
     // Display the specified resource
@@ -69,6 +69,6 @@ class PostController extends Controller
     {
         $post->delete(); // Delete the post
 
-        return redirect()->route('posts')->with('success', 'Post deleted successfully.');
+        return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
     }
 }
