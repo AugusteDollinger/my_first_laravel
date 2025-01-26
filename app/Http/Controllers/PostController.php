@@ -30,9 +30,15 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $validated['user_id'] = auth()->id();
+
+        if($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $validated['image'] = basename($imagePath); // Store only the image name
+        }
 
         Post::create($validated); // Create a new post
 
@@ -48,7 +54,7 @@ class PostController extends Controller
     // Show the form for editing the specified resource
     public function edit(Post $post)
     {
-        return view('posts.edit', compact('post'));
+        return view('posts-edit', compact('post'));
     }
 
     // Update the specified resource in storage
