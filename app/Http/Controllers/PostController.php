@@ -65,6 +65,12 @@ class PostController extends Controller
             'content' => 'required|string',
         ]);
 
+        if($request->hasFile('image')) {
+            $post->image ? unlink(storage_path('app/public/images/' . $post->image)) : null; // Delete the old image if exists
+            $imagePath = $request->file('image')->store('images', 'public');
+            $validated['image'] = basename($imagePath); // Store only the image name
+        }
+
         $post->update($validated); // Update the post
 
         return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
@@ -73,6 +79,8 @@ class PostController extends Controller
     // Remove the specified resource from storage
     public function destroy(Post $post)
     {
+        $post->image ? unlink(storage_path('app/public/images/' . $post->image)) : null; // Delete the image if exists
+
         $post->delete(); // Delete the post
 
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
